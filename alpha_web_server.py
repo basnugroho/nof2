@@ -417,15 +417,21 @@ async def start_alpha_web_server(alpha_trader):
     app['alpha_trader'] = alpha_trader
     app.router.add_get('/', handle_root)
     app.router.add_get('/api/alpha/status', get_alpha_trader_status)
+
     runner = web.AppRunner(app)
     await runner.setup()
-    port = 58183
-    site = web.TCPSite(runner, '0.0.0.0', port)
+
+    host = "0.0.0.0"
+    port = int(os.environ.get("PORT", "58183"))  # default utk lokal
+
+    site = web.TCPSite(runner, host, port)
     try:
         await site.start()
-        logging.info(f"🚀 AI Alpha Trader Dashboard 已启动: http://127.0.0.1:{port}")
+        logging.info(f"🚀 AI Alpha Trader Dashboard started on http://{host}:{port}")
         return site
     except Exception as e:
         logging.critical(f"启动 Alpha Web 服务器失败，端口 {port} 可能被占用。错误: {e}")
         await runner.cleanup()
         return None
+
+
