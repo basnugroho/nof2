@@ -1,54 +1,27 @@
-# --- Python ---
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.so
 *.egg-info/
 .dist-info/
-.build/
 build/
 dist/
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Virtual env
 .venv/
 venv/
 env/
 
-# Jupyter
-.ipynb_checkpoints/
-
-# --- Proyek nof2 (data & log runtime) ---
 data/
 logs/
 *.log
 
-# Simpan folder kosong bila perlu
-# (buat file placeholder agar folder tetap ada)
-# !data/.keep
-# !logs/.keep
-
-# --- Secrets / Env ---
 .env
 .env.*
 *.env
 
-# --- OS / Editor ---
 .DS_Store
-*.swp
-*.swo
 .idea/
 .vscode/
 
-# --- Docker ---
-*.tar
 docker-compose.override.yml
-
-# --- Node (kalau ada asset tooling) ---
-node_modules/
-npm-debug.log*
-yarn.lock
-pnpm-lock.yaml
