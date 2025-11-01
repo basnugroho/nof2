@@ -1,7 +1,7 @@
 # Dockerfile for nof2 project
 # Uses Python 3.12.6 (slim) and creates a non-root user
 
-FROM python:3.12.6-slim
+FROM python:3.12-slim
 
 # keep Python output unbuffered (helpful for logs)
 ENV PYTHONUNBUFFERED=1
@@ -11,8 +11,11 @@ WORKDIR /opt/app
 
 # Install minimal system deps needed to build wheels for some packages
 # (this keeps image smaller than full build-essential but covers common cases)
+# Update and upgrade OS packages first to pull in security fixes from the base image
 RUN apt-get update \
+    && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends \
+       ca-certificates \
        build-essential \
        gcc \
        g++ \
@@ -28,9 +31,15 @@ COPY requirements.txt /opt/app/requirements.txt
 
 # Install python deps (no-cache to reduce image size)
 RUN pip install --upgrade pip setuptools wheel \
-    && pip install --no-cache-dir -r requirements.txt || true
-# Note: `|| true` used because `ccxt.pro` or other private packages may not be resolvable in all environments.
-# If pip install fails due to private packages, build will still succeed and user can install them later.
+    && pip install --no-cache-dir -r requirements.txt
+
+# sanity check: fail kalau joblib tidak terinstall
+RUN python - <<'PY'
+import sys
+import importlib
+m = importlib.import_module("joblib")
+print("joblib OK", getattr(m, "__version__", "?"))
+PY
 
 # Copy application code
 COPY . /opt/app
