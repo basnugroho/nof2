@@ -18,7 +18,8 @@ async def main():
     setup_logging()
     logger = logging.getLogger("AlphaRun")
 
-    if not settings.ALPHA_MODE_ENABLED:
+    alpha_enabled = getattr(settings, "ALPHA_MODE_ENABLED", True)  # default True kalau field tidak ada
+    if not alpha_enabled:
         logger.warning("AI Alpha Trader 模块未在配置文件中启用 (ALPHA_MODE_ENABLED=false)，程序退出。")
         return
 
